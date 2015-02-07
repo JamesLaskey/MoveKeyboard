@@ -5,20 +5,28 @@
     android:keyHeight="48dp"
     >
     <Row>
-        <Key android:codes="97" android:keyLabel="line" android:keyEdgeFlags="left"/>
+        <Key android:codes="97" android:keyLabel="delete" android:keyEdgeFlags="left"/>
+        <Key android:codes="115" android:keyLabel="line" android:horizontalGap="14.5%p"/>
         <Key android:codes="115" android:keyLabel="char"/>
-        <Key android:codes="35" android:keyLabel="para" android:keyEdgeFlags="right"/>
+        <Key android:codes="115" android:keyLabel="para"/>
+        <Key android:codes="115" android:keyLabel="paste"/>
+        <Key android:codes="35" android:keyLabel="select" android:keyEdgeFlags="right"/>
     </Row>
     <Row>
         <Key android:codes="-1" android:keyLabel="line" android:keyEdgeFlags="left"/>
+        <Key android:codes="46" android:keyLabel="word"/>
         <Key android:codes="46" android:keyLabel="char"/>
         <Key android:codes="46" android:keyLabel="num"/>
+        <Key android:codes="46" android:keyLabel="word"/>
         <Key android:codes="46" android:keyLabel="char"/>
         <Key android:codes="2" android:keyLabel="line" android:keyEdgeFlags="right"/>
     </Row>
     <Row android:rowEdgeFlags="bottom">
-        <Key android:codes="44" android:keyLabel="line"  android:keyEdgeFlags="left"/>
+        <Key android:codes="44" android:keyLabel="cut"  android:keyEdgeFlags="left"/>
+        <Key android:codes="46" android:keyLabel="copy"/>
+        <Key android:codes="46" android:keyLabel="line"/>
         <Key android:codes="46" android:keyLabel="char"/>
-        <Key android:codes="-4" android:keyLabel="para"  android:keyEdgeFlags="right"/>
+        <Key android:codes="46" android:keyLabel="para"/>
+        <Key android:codes="-4" android:keyLabel="mode"  android:keyWidth="28.5%" android:keyEdgeFlags="right"/>
     </Row>
 </Keyboard>

@@ -44,6 +44,8 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     private static final int MODE_PASTE = 105;
     private static final int MODE_NUMVAL = 106;
 
+    private int numVal = 0;
+
     @Override
     public View onCreateInputView() {
         kvInsert = (KeyboardView)getLayoutInflater().inflate(R.layout.keyboard, null);
@@ -75,6 +77,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
 
     private void onMoveKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
+
         switch(primaryCode) {
             case PARA_UP :
 
@@ -130,6 +133,11 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 break;
             case MODE_DELETE :
 
+                break;
+            case MODE_NUMVAL :
+                numVal = 0;
+                kvMove.invalidateKey(MODE_NUMVAL);
+                keyboardMove.getKeys().get(MODE_NUMVAL).label = Integer.toString(numVal);
                 break;
         }
     }

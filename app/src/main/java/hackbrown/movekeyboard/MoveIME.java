@@ -17,12 +17,14 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     private Keyboard keyboardMove;
     private KeyboardView kvMove;
 
+    private View NumView;
+
     private boolean caps = false;
     private boolean moveMode = false;
 
 
-    private static final int PARA_FOR = 1;
-    private static final int PARA_BACK = 2;
+    private static final int PARA_UP = 1;
+    private static final int PARA_DOWN = 2;
     private static final int LINE_START = 3;
     private static final int LINE_END = 4;
     private static final int WORD_FOR = 5;
@@ -31,6 +33,8 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     private static final int CHAR_BACK = 8;
     private static final int LINE_UP = 9;
     private static final int LINE_DOWN = 10;
+    private static final int PAGE_UP = 11;
+    private static final int PAGE_DOWN = 12;
 
     private static final int MODE_SWITCH = 100;
     private static final int MODE_SELECT = 101;
@@ -38,6 +42,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     private static final int MODE_COPY = 103;
     private static final int MODE_CUT = 104;
     private static final int MODE_PASTE = 105;
+    private static final int MODE_NUMVAL = 106;
 
     @Override
     public View onCreateInputView() {
@@ -51,12 +56,16 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         kvMove.setKeyboard(keyboardMove);
         kvMove.setOnKeyboardActionListener(this);
 
+        NumView = getLayoutInflater().inflate(R.layout.num_select, null);
+
         return kvInsert;
     }
 
     @Override
-    public void onPress(int i) {
+    public void onPress(int keyCode) {
+        if(keyCode == MODE_NUMVAL) {
 
+        }
     }
 
     @Override
@@ -67,10 +76,16 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     private void onMoveKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
         switch(primaryCode) {
-            case PARA_BACK :
+            case PARA_UP :
 
                 break;
-            case PARA_FOR :
+            case PARA_DOWN :
+
+                break;
+            case PAGE_UP :
+
+                break;
+            case PAGE_DOWN :
 
                 break;
             case LINE_START :
@@ -99,6 +114,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 break;
             case MODE_SWITCH :
                 setInputView(kvInsert);
+                moveMode = false;
                 break;
             case MODE_SELECT :
                 
@@ -134,6 +150,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 break;
             case MODE_SWITCH :
                 setInputView(kvMove);
+                moveMode = true;
                 break;
             default:
                 char code = (char)primaryCode;

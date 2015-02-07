@@ -12,18 +12,46 @@ import android.view.inputmethod.InputConnection;
  */
 public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboardActionListener{
 
-    private KeyboardView kv;
-    private Keyboard keyboard;
+    private KeyboardView kvInsert;
+    private Keyboard keyboardInsert;
+    private Keyboard keyboardMove;
+    private KeyboardView kvMove;
 
     private boolean caps = false;
+    private boolean moveMode = false;
+
+
+    private static final int PARA_FOR = 1;
+    private static final int PARA_BACK = 2;
+    private static final int LINE_START = 3;
+    private static final int LINE_END = 4;
+    private static final int WORD_FOR = 5;
+    private static final int WORD_BACK = 6;
+    private static final int CHAR_FOR = 7;
+    private static final int CHAR_BACK = 8;
+    private static final int LINE_UP = 9;
+    private static final int LINE_DOWN = 10;
+
+    private static final int MODE_SWITCH = 100;
+    private static final int MODE_SELECT = 101;
+    private static final int MODE_DELETE = 102;
+    private static final int MODE_COPY = 103;
+    private static final int MODE_CUT = 104;
+    private static final int MODE_PASTE = 105;
 
     @Override
     public View onCreateInputView() {
-        kv = (KeyboardView)getLayoutInflater().inflate(R.layout.keyboard, null);
-        keyboard = new Keyboard(this, R.xml.move);
-        kv.setKeyboard(keyboard);
-        kv.setOnKeyboardActionListener(this);
-        return kv;
+        kvInsert = (KeyboardView)getLayoutInflater().inflate(R.layout.keyboard, null);
+        keyboardInsert = new Keyboard(this, R.xml.qwerty);
+        kvInsert.setKeyboard(keyboardInsert);
+        kvInsert.setOnKeyboardActionListener(this);
+
+        kvMove = (KeyboardView)getLayoutInflater().inflate(R.layout.movement, null);
+        keyboardMove = new Keyboard(this, R.xml.move);
+        kvMove.setKeyboard(keyboardMove);
+        kvMove.setOnKeyboardActionListener(this);
+
+        return kvInsert;
     }
 
     @Override
@@ -36,8 +64,61 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
 
     }
 
-    @Override
-    public void onKey(int primaryCode, int[] keyCodes) {
+    private void onMoveKey(int primaryCode, int[] keyCodes) {
+        InputConnection ic = getCurrentInputConnection();
+        switch(primaryCode) {
+            case PARA_BACK :
+
+                break;
+            case PARA_FOR :
+
+                break;
+            case LINE_START :
+
+                break;
+            case LINE_END :
+
+                break;
+            case LINE_UP :
+
+                break;
+            case LINE_DOWN :
+
+                break;
+            case WORD_FOR :
+
+                break;
+            case WORD_BACK :
+
+                break;
+            case CHAR_BACK :
+
+                break;
+            case CHAR_FOR :
+
+                break;
+            case MODE_SWITCH :
+                setInputView(kvInsert);
+                break;
+            case MODE_SELECT :
+                
+                break;
+            case MODE_COPY :
+
+                break;
+            case MODE_CUT :
+
+                break;
+            case MODE_PASTE :
+
+                break;
+            case MODE_DELETE :
+
+                break;
+        }
+    }
+
+    public void onInsertKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
         switch(primaryCode){
             case Keyboard.KEYCODE_DELETE :
@@ -45,11 +126,14 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 break;
             case Keyboard.KEYCODE_SHIFT:
                 caps = !caps;
-                keyboard.setShifted(caps);
-                kv.invalidateAllKeys();
+                keyboardInsert.setShifted(caps);
+                kvInsert.invalidateAllKeys();
                 break;
             case Keyboard.KEYCODE_DONE:
                 ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
+                break;
+            case MODE_SWITCH :
+                setInputView(kvMove);
                 break;
             default:
                 char code = (char)primaryCode;
@@ -57,6 +141,14 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                     code = Character.toUpperCase(code);
                 }
                 ic.commitText(String.valueOf(code),1);
+        }
+    }
+    @Override
+    public void onKey(int primaryCode, int[] keyCodes) {
+        if(moveMode) {
+            onMoveKey(primaryCode, keyCodes);
+        }else {
+            onInsertKey(primaryCode, keyCodes);
         }
     }
 

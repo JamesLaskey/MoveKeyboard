@@ -20,7 +20,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     @Override
     public View onCreateInputView() {
         kv = (KeyboardView)getLayoutInflater().inflate(R.layout.keyboard, null);
-        keyboard = new Keyboard(this, R.xml.qwerty);
+        keyboard = new Keyboard(this, R.xml.move);
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
         return kv;

@@ -6,6 +6,7 @@ import android.inputmethodservice.KeyboardView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
+import android.widget.LinearLayout;
 
 /**
  * Created by jim on 2/7/15.
@@ -45,6 +46,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     private static final int MODE_NUMVAL = 106;
 
     private int numVal = 0;
+    private static final int PARA_SIZE_GUESS = 100;
 
     @Override
     public View onCreateInputView() {
@@ -66,6 +68,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     @Override
     public void onPress(int keyCode) {
         if(keyCode == MODE_NUMVAL) {
+            View NumLinLayout = getLayoutInflater().inflate(R.layout.num_select, null);
 
         }
     }
@@ -77,16 +80,15 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
 
     private void onMoveKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
-
         switch(primaryCode) {
             case PARA_UP :
-
+                paraJumpUp(ic);
                 break;
             case PARA_DOWN :
-
+                paraJumpDown(ic);
                 break;
             case PAGE_UP :
-
+                
                 break;
             case PAGE_DOWN :
 
@@ -136,10 +138,19 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 break;
             case MODE_NUMVAL :
                 numVal = 0;
-                kvMove.invalidateKey(MODE_NUMVAL);
-                keyboardMove.getKeys().get(MODE_NUMVAL).label = Integer.toString(numVal);
+                kvMove.invalidateKey(10);
+                keyboardMove.getKeys().get(10).label = Integer.toString(numVal);
                 break;
         }
+    }
+
+    private void paraJumpDown(InputConnection ic) {
+
+    }
+
+    private void paraJumpUp(InputConnection ic) {
+        CharSequence textAfter = ic.getTextBeforeCursor(3*PARA_SIZE_GUESS, InputConnection.GET_TEXT_WITH_STYLES);
+        System.out.print(textAfter);
     }
 
     public void onInsertKey(int primaryCode, int[] keyCodes) {

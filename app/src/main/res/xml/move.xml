@@ -1,13 +1,13 @@
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
-    android:keyWidth="10%p"
-    android:horizontalGap="0px"
-    android:verticalGap="0px"
-    android:keyHeight="60dp"
+    android:keyWidth="14%p"
+    android:horizontalGap="0.25%"
+    android:verticalGap="1px"
+    android:keyHeight="48dp"
     >
     <Row>
         <Key android:codes="97" android:keyLabel="line" android:keyEdgeFlags="left"/>
         <Key android:codes="115" android:keyLabel="char"/>
-        <Key android:codes="35,64" android:keyLabel="para" android:keyEdgeFlags="right"/>
+        <Key android:codes="35" android:keyLabel="para" android:keyEdgeFlags="right"/>
     </Row>
     <Row>
         <Key android:codes="-1" android:keyLabel="line" android:keyEdgeFlags="left"/>

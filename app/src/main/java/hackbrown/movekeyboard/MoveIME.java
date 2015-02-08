@@ -83,6 +83,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 paraJumpDown(ic);
                 break;
             case PAGE_UP :
+                //super.onKeyDown(KeyEvent.KEYCODE_PAGE_UP);
 
                 break;
             case PAGE_DOWN :
@@ -144,8 +145,16 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     }
 
     private void paraJumpUp(InputConnection ic) {
-        CharSequence textAfter = ic.getTextBeforeCursor(3*PARA_SIZE_GUESS, InputConnection.GET_TEXT_WITH_STYLES);
-        System.out.print(textAfter);
+        CharSequence textAfter = ic.getTextBeforeCursor(3*PARA_SIZE_GUESS, 0);
+        int cursorPos = -1;
+        for (int i = textAfter.length()-1; i >= 0; i--) {
+            if (textAfter.charAt(i) == '\n') {
+                cursorPos = i + 1;
+            }
+        }
+        //and now we just have to set the cursor there.
+
+
     }
 
     public void onInsertKey(int primaryCode, int[] keyCodes) {

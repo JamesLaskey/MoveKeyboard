@@ -161,6 +161,8 @@ public class MoveIME extends InputMethodService
                     macroBuffer = new ArrayList<Integer>(1);
                 }
                 recording = recording ? false : true;
+                Keyboard.Key recKey = findKey(keyboardMove, MODE_MACRO_RECORD);
+                recKey.label = recording ? "REC" : "rec";
                 break;
             case MODE_MACRO_PLAY :
                 recording = false;
@@ -384,6 +386,8 @@ public class MoveIME extends InputMethodService
                     macroBuffer = new ArrayList<Integer>(1);
                 }
                 recording = recording ? false : true;
+                Keyboard.Key key = findKey(keyboardMove, MODE_MACRO_RECORD);
+                key.label = recording ? "REC" : "rec";
                 break;
         }
     }

@@ -152,7 +152,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 cursorPos = i + 1;
             }
         }
-        //and now we just have to set the cursor there.
+        ic.commitText("", cursorPos);
 
 
     }

@@ -77,10 +77,10 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         InputConnection ic = getCurrentInputConnection();
         switch(primaryCode) {
             case PARA_UP :
-                paraJumpUp(ic);
+                jumpForward(ic, new char[] {'\n'});
                 break;
             case PARA_DOWN :
-                paraJumpDown(ic);
+                jumpBackward(ic, new char[] {'\n'});
                 break;
             case PAGE_UP :
 
@@ -140,8 +140,92 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         }
     }
 
-    private void paraJumpDown(InputConnection ic) {
 
+    private boolean cmpChars(char toCheck, char[] against) {
+        for(char c : against) {
+            if (toCheck == c) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void jumpForward(InputConnection ic, char[] seekCharacters) {
+        if (ic == null) {
+            System.err.println("ic null");
+            return;
+        }
+        int cursorPos = -1;
+        int prevSize = 0;
+        boolean found = false;
+        CharSequence textAfter = null;
+        while(!found) {
+            textAfter = ic.getTextAfterCursor(prevSize + PARA_SIZE_GUESS, 0);
+            int start = 1;
+            if(textAfter.length() > 0 &&
+                    cmpChars(textAfter.charAt(textAfter.length()+1), seekCharacters) &&
+                    start == textAfter.length()+1) {
+                start++;
+            }
+            for (int i = prevSize; i < textAfter.length(); i++) {
+                if (cmpChars(textAfter.charAt(i), seekCharacters)) {
+                    System.err.println("found");
+                    cursorPos = prevSize + i;
+                    found = true;
+                    break;
+                }
+            }
+            if (prevSize == textAfter.length()) {
+                break;
+            }
+            prevSize = textAfter.length();
+        }
+        // no new lines in doc
+        if (!found) {
+            ic.commitText("", textAfter.length());
+            return;
+        }
+
+        ic.commitText("", cursorPos - 1);
+    }
+
+    private void jumpBackward(InputConnection ic, char[] seekCharacters) {
+        if (ic == null) {
+            System.err.println("ic null");
+            return;
+        }
+        int cursorPos = -1;
+        int prevSize = 0;
+        boolean found = false;
+        CharSequence textBefore = null;
+        while(!found) {
+            textBefore = ic.getTextBeforeCursor(prevSize + PARA_SIZE_GUESS, 0);
+            int start = (PARA_SIZE_GUESS - 1 > textBefore.length()) ? textBefore.length() - 1: PARA_SIZE_GUESS - 1;
+            if(textBefore.length() > 0 &&
+                    cmpChars(textBefore.charAt(textBefore.length()-1), seekCharacters) &&
+                    start == textBefore.length()-1) {
+                start--;
+            }
+            for (int i = start; i >= 0; i--) {
+                if (cmpChars(textBefore.charAt(i), seekCharacters)) {
+                    System.err.println("found");
+                    cursorPos = prevSize + PARA_SIZE_GUESS - i;
+                    found = true;
+                    break;
+                }
+            }
+            if (prevSize == textBefore.length()) {
+                break;
+            }
+            prevSize = textBefore.length();
+        }
+        // no new lines in doc
+        if (!found) {
+            ic.commitText("", -1 * textBefore.length());
+            return;
+        }
+
+        ic.commitText("", -1 * cursorPos + 1);
     }
 
     private void paraJumpUp(InputConnection ic) {

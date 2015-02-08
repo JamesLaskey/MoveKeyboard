@@ -30,6 +30,7 @@ public interface MoveKeyboardConstants {
     public static final int MODE_COPY = 103;
     public static final int MODE_CUT = 104;
     public static final int MODE_PASTE = 105;
-    public static final int MODE_NUMVAL = 106;
+    public static final int MODE_MACRO_RECORD = 106;
+    public static final int MODE_MACRO_PLAY = 107;
     
 }

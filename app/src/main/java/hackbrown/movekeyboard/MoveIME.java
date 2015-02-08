@@ -9,6 +9,7 @@ import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +35,8 @@ public class MoveIME extends InputMethodService
     private int numVal = 0;
     private static final int PARA_SIZE_GUESS = 100;
 
-
+    private boolean recording = false;
+    private ArrayList<Integer> macroBuffer = new ArrayList<Integer>(1);
 
 
     @Override
@@ -151,10 +153,14 @@ public class MoveIME extends InputMethodService
             case MODE_DELETE :
                 deleteSelection(ic);
                 break;
-            case MODE_NUMVAL :
-                numVal = 0;
-                kvMove.invalidateKey(10);
-                keyboardMove.getKeys().get(9).label = Integer.toString(numVal);
+            case MODE_MACRO_RECORD :
+                recording = recording ? false : true;
+                break;
+            case MODE_MACRO_PLAY :
+                recording = false;
+                for(Integer keycode : macroBuffer) {
+                    sendKeyUpDown(ic, keycode);
+                }
                 break;
         }
     }
@@ -360,9 +366,9 @@ public class MoveIME extends InputMethodService
             case MODE_DELETE :
                 deleteSelection(ic);
                 break;
-            case MODE_NUMVAL :
+            case MODE_MACRO_RECORD :
+                recording = recording ? false : true;
                 break;
-
         }
     }
 
@@ -402,6 +408,9 @@ public class MoveIME extends InputMethodService
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
+        if(recording) {
+            macroBuffer.add(primaryCode);
+        }
         switch(keyMode) {
             case MOVE:
                 onMoveKey(primaryCode, keyCodes);

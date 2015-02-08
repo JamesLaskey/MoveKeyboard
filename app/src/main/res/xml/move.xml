@@ -10,13 +10,14 @@
         <Key android:codes="11" android:keyLabel="page"/>
         <Key android:codes="9" android:keyLabel="line"/>
         <Key android:codes="1" android:keyLabel="para"/>
-        <Key android:codes="101" android:keyLabel="select" android:keyWidth="28.5%" android:keyEdgeFlags="right"/>
+        <Key android:codes="107" android:keyLabel="play"/>
+        <Key android:codes="101" android:keyLabel="select" android:keyEdgeFlags="right"/>
     </Row>
     <Row>
         <Key android:codes="3" android:keyLabel="line" android:keyEdgeFlags="left"/>
         <Key android:codes="6" android:keyLabel="word"/>
         <Key android:codes="8" android:keyLabel="char"/>
-		<Key android:codes="106" android:keyLabel="num"/>
+		<Key android:codes="106" android:keyLabel="rec"/>
         <Key android:codes="7" android:keyLabel="char"/>
         <Key android:codes="5" android:keyLabel="word"/>
         <Key android:codes="4" android:keyLabel="line" android:keyEdgeFlags="right"/>

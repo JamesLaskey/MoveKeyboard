@@ -73,6 +73,11 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
 
     }
 
+    private void sendKeyUpDown(InputConnection ic, int keyCode) {
+        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keyCode));
+        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyCode));
+    }
+
     private void onMoveKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
         switch(primaryCode) {
@@ -83,23 +88,22 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 paraJumpDown(ic);
                 break;
             case PAGE_UP :
-
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_PAGE_UP);
                 break;
             case PAGE_DOWN :
-                ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_PAGE_DOWN));
-                ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_PAGE_DOWN));
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_PAGE_DOWN);
                 break;
             case LINE_START :
-
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_HOME);
                 break;
             case LINE_END :
-
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_MOVE_END);
                 break;
             case LINE_UP :
-
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_UP);
                 break;
             case LINE_DOWN :
-
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_DOWN);
                 break;
             case WORD_FOR :
 
@@ -108,10 +112,10 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
 
                 break;
             case CHAR_BACK :
-
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_LEFT);
                 break;
             case CHAR_FOR :
-
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_RIGHT);
                 break;
             case MODE_SWITCH :
                 setInputView(kvInsert);

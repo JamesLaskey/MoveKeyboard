@@ -161,16 +161,17 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 key.label = "SELECT";
                 break;
             case MODE_COPY :
-
+                saveText(ic);
                 break;
             case MODE_CUT :
-
+                saveText(ic);
+                deleteSelection(ic);
                 break;
             case MODE_PASTE :
-
+                paste(ic);
                 break;
             case MODE_DELETE :
-
+                deleteSelection(ic);
                 break;
             case MODE_NUMVAL :
                 numVal = 0;
@@ -357,11 +358,14 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 setInputView(kvInsert);
                 keyMode = Mode.INSERT;
                 break;
-            case MODE_SELECT :
+            case MODE_SELECT : {
                 keyMode = Mode.MOVE;
+                ExtractedText et = ic.getExtractedText(new ExtractedTextRequest(), 0);
+                ic.setSelection(et.selectionEnd, et.selectionEnd);
                 Keyboard.Key key = findKey(keyboardMove, MODE_SELECT);
                 key.label = "select";
                 break;
+            }
             case MODE_COPY :
                 saveText(ic);
                 keyMode = Mode.MOVE;
@@ -372,8 +376,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 keyMode = Mode.MOVE;
                 break;
             case MODE_PASTE :
-                deleteSelection(ic);
-                ic.commitText(clipboardText, 1);
+                paste(ic);
                 keyMode = Mode.MOVE;
                 break;
             case MODE_DELETE :
@@ -411,6 +414,12 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     private void deleteSelection(InputConnection ic) {
         //suspect from SO
         ic.commitText("", 1);
+    }
+
+    private void paste(InputConnection ic) {
+        if (clipboardText != null && !clipboardText.equals("")) {
+            ic.commitText(clipboardText, 1);
+        }
     }
 
     @Override

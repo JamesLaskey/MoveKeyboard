@@ -1,9 +1,11 @@
 package hackbrown.movekeyboard;
 
+import android.graphics.Canvas;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
 import android.widget.LinearLayout;
@@ -67,19 +69,17 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         kvMove.setKeyboard(keyboardMove);
         kvMove.setOnKeyboardActionListener(this);
 
-
         return kvInsert;
     }
 
     @Override
     public void onPress(int keyCode) {
-        if(keyCode == MODE_NUMVAL) {
-        }
+
     }
 
     @Override
-    public void onRelease(int i) {
-
+    public void onRelease(int keyCode) {
+        
     }
 
     private void sendKeyUpDown(InputConnection ic, int keyCode) {
@@ -87,14 +87,30 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyCode));
     }
 
+    private Keyboard.Key findKey(Keyboard kb, int keycode) {
+        for(Keyboard.Key k : kb.getKeys()) {
+            if(k.codes[0] == keycode) {
+                return k;
+            }
+        }
+        return null;
+    }
+
     private void onMoveKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
+        int move;
         switch(primaryCode) {
             case PARA_UP :
-                jumpBackward(ic, new char[] {'\n'});
+                move = jumpBackward(ic, new char[] {'\n'});
+                if(move != 0) {
+                    ic.commitText("", move);
+                }
                 break;
             case PARA_DOWN :
-                jumpForward(ic, new char[] {'\n'});
+                move = jumpForward(ic, new char[] {'\n'});
+                if(move != 0) {
+                    ic.commitText("", move);
+                }
                 break;
             case PAGE_UP :
                 sendKeyUpDown(ic, KeyEvent.KEYCODE_PAGE_UP);
@@ -115,10 +131,16 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_DOWN);
                 break;
             case WORD_FOR :
-                jumpForward(ic, new char[] {' ', '\t', '\n'});
+                move = jumpForward(ic, new char[] {' ', '\t', '\n'});
+                if(move != 0) {
+                    ic.commitText("", move);
+                }
                 break;
             case WORD_BACK :
-                jumpBackward(ic, new char[] {' ', '\t', '\n'});
+                move = jumpBackward(ic, new char[]{' ', '\t', '\n'});
+                if(move != 0) {
+                    ic.commitText("", move);
+                }
                 break;
             case CHAR_BACK :
                 sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_LEFT);
@@ -132,6 +154,8 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 break;
             case MODE_SELECT :
                 keyMode = Mode.SELECT;
+                Keyboard.Key key = findKey(keyboardMove, MODE_SELECT);
+                key.label = "SELECT";
                 break;
             case MODE_COPY :
 
@@ -152,6 +176,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 break;
         }
     }
+
 
 
     private boolean cmpChars(char toCheck, char[] against) {
@@ -313,6 +338,8 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 break;
             case MODE_SELECT :
                 keyMode = Mode.MOVE;
+                Keyboard.Key key = findKey(keyboardMove, MODE_SELECT);
+                key.label = "select";
                 break;
             case MODE_COPY :
                 System.err.println("copy");

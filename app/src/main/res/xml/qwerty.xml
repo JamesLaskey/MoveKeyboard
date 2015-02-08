@@ -38,7 +38,7 @@
         <Key android:codes="106" android:keyLabel="j"/>
         <Key android:codes="107" android:keyLabel="k"/>
         <Key android:codes="108" android:keyLabel="l"/>
-        <Key android:codes="1000" android:keyLabel="MS" android:keyEdgeFlags="right"/>
+        <Key android:codes="-4" android:keyLabel="done" android:keyEdgeFlags="right"/>
     </Row>
     <Row>
         <Key android:codes="-1" android:keyLabel="CAPS" android:keyEdgeFlags="left"/>
@@ -55,8 +55,8 @@
     <Row android:rowEdgeFlags="bottom">
         <Key android:codes="44" android:keyLabel="," android:keyWidth="10%p"  android:keyEdgeFlags="left"/>
         <Key android:codes="47" android:keyLabel="/" android:keyWidth="10%p" />
-        <Key android:codes="32" android:keyLabel="SPACE" android:keyWidth="40%p" android:isRepeatable="true"/>
-        <Key android:codes="-5" android:keyLabel="DEL" android:keyWidth="20%p" android:isRepeatable="true"/>
-        <Key android:codes="-4" android:keyLabel="DONE" android:keyWidth="20%p" android:keyEdgeFlags="right"/>
+        <Key android:codes="32" android:keyLabel="space" android:keyWidth="40%p" android:isRepeatable="true"/>
+        <Key android:codes="-5" android:keyLabel="del" android:keyWidth="20%p" android:isRepeatable="true"/>
+        <Key android:codes="1000" android:keyLabel="mode" android:keyWidth="20%p" android:keyEdgeFlags="right"/>
     </Row>
 </Keyboard>

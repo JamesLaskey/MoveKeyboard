@@ -7,6 +7,8 @@ import android.inputmethodservice.KeyboardView;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.ExtractedText;
+import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 import android.widget.LinearLayout;
 
@@ -69,6 +71,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         kvMove.setKeyboard(keyboardMove);
         kvMove.setOnKeyboardActionListener(this);
 
+
         return kvInsert;
     }
 
@@ -78,8 +81,8 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     }
 
     @Override
-    public void onRelease(int keyCode) {
-        
+    public void onRelease(int i) {
+
     }
 
     private void sendKeyUpDown(InputConnection ic, int keyCode) {
@@ -178,7 +181,6 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     }
 
 
-
     private boolean cmpChars(char toCheck, char[] against) {
         for(char c : against) {
             if (toCheck == c) {
@@ -209,7 +211,6 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
             }
             for (int i = prevSize; i < textAfter.length(); i++) {
                 if (cmpChars(textAfter.charAt(i), seekCharacters)) {
-                    System.err.println("found");
                     cursorPos = i;
                     found = true;
                     break;
@@ -250,7 +251,6 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
             }
             for (int i = start; i >= 0; i--) {
                 if (cmpChars(textBefore.charAt(i), seekCharacters)) {
-                    System.err.println("found");
                     cursorPos = prevSize + PARA_SIZE_GUESS - i;
                     found = true;
                     break;
@@ -299,42 +299,63 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
 
 
     private void onSelectKey(int primaryCode, int[] keyCodes) {
-        System.err.println("Selecting");
         InputConnection ic = getCurrentInputConnection();
         switch(primaryCode) {
-            case PARA_UP :
-                jumpForward(ic, new char[] {'\n'});
+            case PARA_UP : {
+                int jump = jumpForward(ic, new char[]{'\n'});
+                ExtractedText et = ic.getExtractedText(new ExtractedTextRequest(), 0);
+                ic.setSelection(et.selectionStart, et.selectionEnd + jump);
                 break;
-            case PARA_DOWN :
-                jumpBackward(ic, new char[] {'\n'});
+            }
+            case PARA_DOWN : {
+                int jump = jumpBackward(ic, new char[]{'\n'});
+                ExtractedText et = ic.getExtractedText(new ExtractedTextRequest(), 0);
+                ic.setSelection(et.selectionStart + jump, et.selectionEnd);
                 break;
+            }
             case PAGE_UP :
-                sendKeyUpDown(ic, KeyEvent.KEYCODE_PAGE_UP);
+                setSelectionToKeyStroke(ic, KeyEvent.KEYCODE_PAGE_UP, true);
                 break;
             case PAGE_DOWN :
-                sendKeyUpDown(ic, KeyEvent.KEYCODE_PAGE_DOWN);
+                setSelectionToKeyStroke(ic, KeyEvent.KEYCODE_PAGE_DOWN, false);
                 break;
             case LINE_START :
-                sendKeyUpDown(ic, KeyEvent.KEYCODE_MOVE_HOME);
+                setSelectionToKeyStroke(ic, KeyEvent.KEYCODE_MOVE_HOME, true);
                 break;
             case LINE_END :
-                sendKeyUpDown(ic, KeyEvent.KEYCODE_MOVE_END);
+                setSelectionToKeyStroke(ic, KeyEvent.KEYCODE_MOVE_END, false);
                 break;
             case LINE_UP :
+                setSelectionToKeyStroke(ic, KeyEvent.KEYCODE_DPAD_UP, true);
                 break;
             case LINE_DOWN :
+                setSelectionToKeyStroke(ic, KeyEvent.KEYCODE_DPAD_DOWN, false);
                 break;
-            case WORD_FOR :
-
+            case WORD_FOR : {
+                int jump = jumpForward(ic, new char[]{' ', '\t', '\n'});
+                ExtractedText et = ic.getExtractedText(new ExtractedTextRequest(), 0);
+                ic.setSelection(et.selectionStart, et.selectionEnd + jump);
                 break;
-            case WORD_BACK :
-
+            }
+            case WORD_BACK : {
+                int jump = jumpBackward(ic, new char[]{' ', '\t', '\n'});
+                ExtractedText et = ic.getExtractedText(new ExtractedTextRequest(), 0);
+                ic.setSelection(et.selectionStart + jump, et.selectionEnd);
                 break;
-            case CHAR_BACK :
+            }
+            case CHAR_BACK : {
+                ExtractedText et = ic.getExtractedText(new ExtractedTextRequest(), 0);
+                ic.setSelection(et.selectionStart - 1, et.selectionEnd);
                 break;
-            case CHAR_FOR :
+            }
+            case CHAR_FOR : {
+                ExtractedText et = ic.getExtractedText(new ExtractedTextRequest(), 0);
+                ic.setSelection(et.selectionStart, et.selectionEnd + 1);
                 break;
+            }
             case MODE_SWITCH :
+                setInputView(kvInsert);
+                keyMode = Mode.INSERT;
                 break;
             case MODE_SELECT :
                 keyMode = Mode.MOVE;
@@ -342,7 +363,6 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 key.label = "select";
                 break;
             case MODE_COPY :
-                System.err.println("copy");
                 saveText(ic);
                 keyMode = Mode.MOVE;
                 break;
@@ -363,6 +383,19 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 break;
 
         }
+    }
+
+
+    private void setSelectionToKeyStroke(InputConnection ic, int keyCode, boolean isUp) {
+        ExtractedText curr = ic.getExtractedText(new ExtractedTextRequest(), 0);
+        sendKeyUpDown(ic, keyCode);
+        ExtractedText newt = ic.getExtractedText(new ExtractedTextRequest(), 0);
+        if (isUp) {
+            ic.setSelection(newt.selectionStart, curr.selectionEnd);
+        } else {
+            ic.setSelection(curr.selectionStart, newt.selectionEnd);
+        }
+
     }
 
     private boolean saveText(InputConnection ic) {

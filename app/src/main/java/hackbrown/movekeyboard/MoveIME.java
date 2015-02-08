@@ -162,7 +162,7 @@ public class MoveIME extends InputMethodService
             case MODE_MACRO_PLAY :
                 recording = false;
                 for(Integer keycode : macroBuffer) {
-                    sendKeyUpDown(ic, keycode);
+                    onKey(new Integer(keycode), new int[] {keycode});
                 }
                 break;
         }

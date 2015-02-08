@@ -10,7 +10,7 @@
         <Key android:codes="11" android:keyLabel="page"/>
         <Key android:codes="9" android:keyLabel="line"/>
         <Key android:codes="1" android:keyLabel="para"/>
-        <Key android:codes="107" android:keyLabel="play"/>
+        <Key android:codes="10800" android:keyLabel="play"/>
         <Key android:codes="101" android:keyLabel="select" android:keyEdgeFlags="right"/>
     </Row>
     <Row>

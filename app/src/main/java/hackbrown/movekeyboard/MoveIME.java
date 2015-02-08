@@ -145,16 +145,39 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     }
 
     private void paraJumpUp(InputConnection ic) {
-        CharSequence textAfter = ic.getTextBeforeCursor(3*PARA_SIZE_GUESS, 0);
-        int cursorPos = -1;
-        for (int i = textAfter.length()-1; i >= 0; i--) {
-            if (textAfter.charAt(i) == '\n') {
-                cursorPos = i + 1;
-            }
+        if (ic == null) {
+            System.err.println("ic null");
+            return;
         }
-        ic.commitText("", cursorPos);
+        int cursorPos = -1;
+        int prevSize = 0;
+        boolean found = false;
+        CharSequence textBefore = null;
+        while(!found) {
+            textBefore = ic.getTextBeforeCursor(prevSize + PARA_SIZE_GUESS, 0);
+            for (int i = (PARA_SIZE_GUESS - 1 > textBefore.length()) ? textBefore.length() - 1: PARA_SIZE_GUESS - 1; i >= 0; i--) {
+                if(textBefore.length() != 0 && textBefore.charAt(textBefore.length()-1) == '\n' && i == textBefore.length()-1) {
+                    continue;
+                }
+                if (textBefore.charAt(i) == '\n') {
+                    System.err.println("found");
+                    cursorPos = prevSize + PARA_SIZE_GUESS - i;
+                    found = true;
+                    break;
+                }
+            }
+            if (prevSize == textBefore.length()) {
+                break;
+            }
+            prevSize = textBefore.length();
+        }
+        // no new lines in doc
+        if (!found) {
+            ic.commitText("", -1 * textBefore.length());
+            return;
+        }
 
-
+        ic.commitText("", -1 * cursorPos + 1);
     }
 
     public void onInsertKey(int primaryCode, int[] keyCodes) {

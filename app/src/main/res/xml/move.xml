@@ -8,16 +8,16 @@
         <Key android:codes="102" android:keyLabel="delete" android:keyEdgeFlags="left"/>
         <Key android:codes="104" android:keyLabel="cut"/>
         <Key android:codes="11" android:keyLabel="page"/>
-        <Key android:codes="9" android:keyLabel="line"/>
+        <Key android:codes="9" />
         <Key android:codes="1" android:keyLabel="para"/>
         <Key android:codes="101" android:keyLabel="select" android:keyWidth="28.5%" android:keyEdgeFlags="right"/>
     </Row>
     <Row>
         <Key android:codes="3" android:keyLabel="line" android:keyEdgeFlags="left"/>
         <Key android:codes="6" android:keyLabel="word"/>
-        <Key android:codes="8" android:keyLabel="char"/>
+        <Key android:codes="8" />
 		<Key android:codes="106" android:keyLabel="num"/>
-        <Key android:codes="7" android:keyLabel="char"/>
+        <Key android:codes="7" />
         <Key android:codes="5" android:keyLabel="word"/>
         <Key android:codes="4" android:keyLabel="line" android:keyEdgeFlags="right"/>
     </Row>
@@ -25,7 +25,7 @@
         <Key android:codes="103" android:keyLabel="copy" android:keyEdgeFlags="left"/>
         <Key android:codes="105" android:keyLabel="paste"/>
         <Key android:codes="12" android:keyLabel="page"/>
-        <Key android:codes="10" android:keyLabel="line"/>
+        <Key android:codes="10" />
         <Key android:codes="2" android:keyLabel="para"/>
         <Key android:codes="1000" android:keyLabel="mode"  android:keyWidth="28.5%" android:keyEdgeFlags="right"/>
     </Row>

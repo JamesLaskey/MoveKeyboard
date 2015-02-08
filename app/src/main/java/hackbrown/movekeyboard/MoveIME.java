@@ -355,31 +355,31 @@ public class MoveIME extends InputMethodService
             }
             case MODE_SWITCH :
                 setInputView(kvInsert);
-                keyMode = Mode.INSERT;
+                leaveSelect(Mode.INSERT);
                 break;
             case MODE_SELECT : {
-                keyMode = Mode.MOVE;
                 ExtractedText et = ic.getExtractedText(new ExtractedTextRequest(), 0);
                 ic.setSelection(et.selectionEnd, et.selectionEnd);
-                Keyboard.Key key = findKey(keyboardMove, MODE_SELECT);
-                key.label = "select";
+                leaveSelect(Mode.MOVE);
                 break;
             }
             case MODE_COPY :
                 saveText(ic);
-                keyMode = Mode.MOVE;
+                System.err.println("leaving select");
+                leaveSelect(Mode.MOVE);
                 break;
             case MODE_CUT :
                 saveText(ic);
                 deleteSelection(ic);
-                keyMode = Mode.MOVE;
+                leaveSelect(Mode.MOVE);
                 break;
             case MODE_PASTE :
                 paste(ic);
-                keyMode = Mode.MOVE;
+                leaveSelect(Mode.MOVE);
                 break;
             case MODE_DELETE :
                 deleteSelection(ic);
+                leaveSelect(Mode.MOVE);
                 break;
             case MODE_MACRO_RECORD :
                 if(!recording) {
@@ -392,6 +392,11 @@ public class MoveIME extends InputMethodService
         }
     }
 
+    private void leaveSelect(Mode newMode) {
+        System.err.print("select left");
+        findKey(keyboardMove, MODE_SELECT).label = "select";
+        keyMode = newMode;
+    }
 
     private void setSelectionToKeyStroke(InputConnection ic, int keyCode, boolean isUp) {
         ExtractedText curr = ic.getExtractedText(new ExtractedTextRequest(), 0);

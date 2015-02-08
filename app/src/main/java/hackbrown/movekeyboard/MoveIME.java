@@ -83,11 +83,11 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 paraJumpDown(ic);
                 break;
             case PAGE_UP :
-                //super.onKeyDown(KeyEvent.KEYCODE_PAGE_UP);
 
                 break;
             case PAGE_DOWN :
-
+                ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_PAGE_DOWN));
+                ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_PAGE_DOWN));
                 break;
             case LINE_START :
 
@@ -215,6 +215,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         }
     }
 
+
     @Override
     public void onText(CharSequence charSequence) {
 
@@ -224,6 +225,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     public void swipeLeft() {
 
     }
+
 
     @Override
     public void swipeRight() {

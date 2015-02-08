@@ -157,12 +157,16 @@ public class MoveIME extends InputMethodService
                 deleteSelection(ic);
                 break;
             case MODE_MACRO_RECORD :
+                if(!recording) {
+                    macroBuffer = new ArrayList<Integer>(1);
+                }
                 recording = recording ? false : true;
                 break;
             case MODE_MACRO_PLAY :
                 recording = false;
-                for(Integer keycode : macroBuffer) {
-                    onKey(new Integer(keycode), new int[] {keycode});
+                for(int i = 0; i < macroBuffer.size() -1; i++) {
+                    int keycode = macroBuffer.get(i);
+                    onKey(keycode, new int[] {keycode});
                 }
                 break;
         }
@@ -376,6 +380,9 @@ public class MoveIME extends InputMethodService
                 deleteSelection(ic);
                 break;
             case MODE_MACRO_RECORD :
+                if(!recording) {
+                    macroBuffer = new ArrayList<Integer>(1);
+                }
                 recording = recording ? false : true;
                 break;
         }

@@ -1,9 +1,12 @@
 package hackbrown.movekeyboard;
 
+import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
+import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,16 +15,15 @@ import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 import android.widget.LinearLayout;
 
+import java.util.List;
+
 /**
  * Created by jim on 2/7/15.
  */
-public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboardActionListener{
+public class MoveIME extends InputMethodService
+        implements KeyboardView.OnKeyboardActionListener, MoveKeyboardConstants{
 
-    private enum Mode {
-        MOVE,
-        INSERT,
-        SELECT
-    }
+
 
     private KeyboardView kvInsert;
     private Keyboard keyboardInsert;
@@ -35,29 +37,11 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     private Mode keyMode = Mode.INSERT;
 
 
-    private static final int PARA_UP = 1;
-    private static final int PARA_DOWN = 2;
-    private static final int LINE_START = 3;
-    private static final int LINE_END = 4;
-    private static final int WORD_FOR = 5;
-    private static final int WORD_BACK = 6;
-    private static final int CHAR_FOR = 7;
-    private static final int CHAR_BACK = 8;
-    private static final int LINE_UP = 9;
-    private static final int LINE_DOWN = 10;
-    private static final int PAGE_UP = 11;
-    private static final int PAGE_DOWN = 12;
-
-    private static final int MODE_SWITCH = 1000;
-    private static final int MODE_SELECT = 101;
-    private static final int MODE_DELETE = 102;
-    private static final int MODE_COPY = 103;
-    private static final int MODE_CUT = 104;
-    private static final int MODE_PASTE = 105;
-    private static final int MODE_NUMVAL = 106;
-
     private int numVal = 0;
     private static final int PARA_SIZE_GUESS = 100;
+
+
+
 
     @Override
     public View onCreateInputView() {
@@ -66,7 +50,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         kvInsert.setKeyboard(keyboardInsert);
         kvInsert.setOnKeyboardActionListener(this);
 
-        kvMove = (KeyboardView)getLayoutInflater().inflate(R.layout.movement, null);
+        kvMove = (MoveKeyboardView)getLayoutInflater().inflate(R.layout.movement, null);
         keyboardMove = new Keyboard(this, R.xml.move);
         kvMove.setKeyboard(keyboardMove);
         kvMove.setOnKeyboardActionListener(this);

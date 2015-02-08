@@ -26,14 +26,10 @@ public class MoveKeyboardView extends KeyboardView implements MoveKeyboardConsta
         Drawable dr;
         for (Keyboard.Key key : keys) {
             switch(key.codes[0]) {
-                case MODE_CUT :
-                    dr = (Drawable) context.getResources().getDrawable(android.R.drawable.ic_menu_crop);
-                    dr.setBounds(key.x, key.y, key.x + key.width, key.y + key.height);
-                    dr.draw(canvas);
-                    break;
                 default:
-                    dr = (Drawable) context.getResources().getDrawable(android.R.drawable.btn_default);
+                    dr = (Drawable) context.getResources().getDrawable(R.drawable.keyboard_background);
                     dr.setBounds(key.x, key.y, key.x + key.width, key.y + key.height);
+                    dr.setAlpha(100);
                     dr.draw(canvas);
                     break;
             }

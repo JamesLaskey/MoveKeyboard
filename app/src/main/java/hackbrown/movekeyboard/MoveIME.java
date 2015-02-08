@@ -24,6 +24,9 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     private Keyboard keyboardMove;
     private KeyboardView kvMove;
 
+
+    private CharSequence registerText = "";
+
     private boolean caps = false;
     private Mode keyMode = Mode.INSERT;
 
@@ -289,10 +292,8 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 sendKeyUpDown(ic, KeyEvent.KEYCODE_MOVE_END);
                 break;
             case LINE_UP :
-                sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_UP);
                 break;
             case LINE_DOWN :
-                sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_DOWN);
                 break;
             case WORD_FOR :
 
@@ -301,20 +302,16 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
 
                 break;
             case CHAR_BACK :
-                sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_LEFT);
                 break;
             case CHAR_FOR :
-                sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_RIGHT);
                 break;
             case MODE_SWITCH :
-                setInputView(kvInsert);
-                keyMode = Mode.INSERT;
                 break;
             case MODE_SELECT :
-
+                keyMode = Mode.MOVE;
                 break;
             case MODE_COPY :
-
+                CharSequence text = ic.getSelectedText(0);
                 break;
             case MODE_CUT :
 

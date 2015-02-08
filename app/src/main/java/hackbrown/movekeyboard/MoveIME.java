@@ -25,7 +25,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     private KeyboardView kvMove;
 
 
-    private CharSequence registerText = "";
+    private CharSequence clipboardText = "";
 
     private boolean caps = false;
     private Mode keyMode = Mode.INSERT;
@@ -131,7 +131,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 keyMode = Mode.INSERT;
                 break;
             case MODE_SELECT :
-                
+                keyMode = Mode.SELECT;
                 break;
             case MODE_COPY :
 
@@ -274,6 +274,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
 
 
     private void onSelectKey(int primaryCode, int[] keyCodes) {
+        System.err.println("Selecting");
         InputConnection ic = getCurrentInputConnection();
         switch(primaryCode) {
             case PARA_UP :
@@ -314,24 +315,42 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 keyMode = Mode.MOVE;
                 break;
             case MODE_COPY :
-                CharSequence text = ic.getSelectedText(0);
+                System.err.println("copy");
+                saveText(ic);
+                keyMode = Mode.MOVE;
                 break;
             case MODE_CUT :
-
+                saveText(ic);
+                deleteSelection(ic);
+                keyMode = Mode.MOVE;
                 break;
             case MODE_PASTE :
-
+                deleteSelection(ic);
+                ic.commitText(clipboardText, 1);
+                keyMode = Mode.MOVE;
                 break;
             case MODE_DELETE :
-
+                deleteSelection(ic);
                 break;
             case MODE_NUMVAL :
-                numVal = 0;
-                kvMove.invalidateKey(10);
-                keyboardMove.getKeys().get(9).label = Integer.toString(numVal);
                 break;
 
         }
+    }
+
+    private boolean saveText(InputConnection ic) {
+        CharSequence text = ic.getSelectedText(0);
+        if (text != null && !text.equals("")) {
+            //ic.performContextMenuAction(action);
+            clipboardText = text;
+            return true;
+        }
+        return false;
+    }
+
+    private void deleteSelection(InputConnection ic) {
+        //suspect from SO
+        ic.commitText("", 1);
     }
 
     @Override

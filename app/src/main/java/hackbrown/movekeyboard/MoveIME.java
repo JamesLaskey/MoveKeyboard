@@ -81,6 +81,9 @@ public class MoveIME extends InputMethodService
 
     private void onMoveKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
+        if (ic == null) {
+            return;
+        }
         int move;
         switch(primaryCode) {
             case PARA_UP :
@@ -257,6 +260,9 @@ public class MoveIME extends InputMethodService
 
     private void onInsertKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
+        if (ic == null) {
+            return;
+        }
         switch(primaryCode){
             case Keyboard.KEYCODE_DELETE :
                 ic.deleteSurroundingText(1, 0);
@@ -285,6 +291,9 @@ public class MoveIME extends InputMethodService
 
     private void onSelectKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
+        if (ic == null) {
+            return;
+        }
         switch(primaryCode) {
             case PARA_UP : {
                 int jump = jumpForward(ic, new char[]{'\n'});

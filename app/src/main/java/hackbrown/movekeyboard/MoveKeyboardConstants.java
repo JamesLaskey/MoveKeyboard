@@ -20,7 +20,7 @@ public interface MoveKeyboardConstants {
     public static final int CHAR_FOR = 7;
     public static final int CHAR_BACK = 8;
     public static final int LINE_UP = 9;
-    public static final int LINE_DOWN = 10;
+    public static final int LINE_DOWN = 1010;
     public static final int PAGE_UP = 11;
     public static final int PAGE_DOWN = 12;
 

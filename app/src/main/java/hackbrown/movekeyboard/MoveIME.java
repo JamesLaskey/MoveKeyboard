@@ -42,7 +42,7 @@ public class MoveIME extends InputMethodService
     @Override
     public View onCreateInputView() {
         kvInsert = (KeyboardView)getLayoutInflater().inflate(R.layout.keyboard, null);
-        keyboardInsert = new Keyboard(this, R.xml.qwerty);
+        keyboardInsert = new Keyboard(this, R.xml.qwerty2);
         kvInsert.setKeyboard(keyboardInsert);
         kvInsert.setOnKeyboardActionListener(this);
 

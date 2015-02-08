@@ -193,7 +193,7 @@ public class MoveIME extends InputMethodService
         CharSequence textAfter = null;
         while(!found) {
             textAfter = ic.getTextAfterCursor(prevSize + PARA_SIZE_GUESS, 0);
-            if(textAfter.length() == 0) {
+            if(textAfter == null || textAfter.length() == 0) {
                 return 0;
             }
             if(textAfter.length() > 0 &&
@@ -232,7 +232,7 @@ public class MoveIME extends InputMethodService
         CharSequence textBefore = null;
         while(!found) {
             textBefore = ic.getTextBeforeCursor(prevSize + PARA_SIZE_GUESS, 0);
-            if(textBefore.length() == 0) {
+            if(textBefore == null || textBefore.length() == 0) {
                 return 0;
             }
             int start = (PARA_SIZE_GUESS - 1 > textBefore.length()) ? textBefore.length() - 1: PARA_SIZE_GUESS - 1;

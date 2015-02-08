@@ -6,11 +6,11 @@
     >
     <Row>
         <Key android:codes="102" android:keyLabel="delete" android:keyEdgeFlags="left"/>
-        <Key android:codes="11" android:keyLabel="page" android:horizontalGap="14.5%p"/>
+        <Key android:codes="104" android:keyLabel="cut"/>
+        <Key android:codes="11" android:keyLabel="page"/>
         <Key android:codes="9" android:keyLabel="line"/>
         <Key android:codes="1" android:keyLabel="para"/>
-        <Key android:codes="105" android:keyLabel="paste"/>
-        <Key android:codes="101" android:keyLabel="select" android:keyEdgeFlags="right"/>
+        <Key android:codes="101" android:keyLabel="select" android:keyWidth="28.5%" android:keyEdgeFlags="right"/>
     </Row>
     <Row>
         <Key android:codes="3" android:keyLabel="line" android:keyEdgeFlags="left"/>
@@ -22,8 +22,8 @@
         <Key android:codes="4" android:keyLabel="line" android:keyEdgeFlags="right"/>
     </Row>
     <Row android:rowEdgeFlags="bottom">
-        <Key android:codes="104" android:keyLabel="cut"  android:keyEdgeFlags="left"/>
-        <Key android:codes="103" android:keyLabel="copy"/>
+        <Key android:codes="103" android:keyLabel="copy" android:keyEdgeFlags="left"/>
+        <Key android:codes="105" android:keyLabel="paste"/>
         <Key android:codes="12" android:keyLabel="page"/>
         <Key android:codes="10" android:keyLabel="line"/>
         <Key android:codes="2" android:keyLabel="para"/>

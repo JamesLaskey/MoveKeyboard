@@ -16,7 +16,7 @@
         <Key android:codes="3" android:keyLabel="line" android:keyEdgeFlags="left"/>
         <Key android:codes="6" android:keyLabel="word"/>
         <Key android:codes="8" android:keyLabel="char"/>
-		<Key android:codes="106" android:keyLabel="num" android:popupCharacters="@xml/num_popup"/>
+		<Key android:codes="106" android:keyLabel="num"/>
         <Key android:codes="7" android:keyLabel="char"/>
         <Key android:codes="5" android:keyLabel="word"/>
         <Key android:codes="4" android:keyLabel="line" android:keyEdgeFlags="right"/>

@@ -13,13 +13,19 @@ import android.widget.LinearLayout;
  */
 public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboardActionListener{
 
+    private enum Mode {
+        MOVE,
+        INSERT,
+        SELECT
+    }
+
     private KeyboardView kvInsert;
     private Keyboard keyboardInsert;
     private Keyboard keyboardMove;
     private KeyboardView kvMove;
 
     private boolean caps = false;
-    private boolean moveMode = false;
+    private Mode keyMode = Mode.INSERT;
 
 
     private static final int PARA_UP = 1;
@@ -94,7 +100,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 sendKeyUpDown(ic, KeyEvent.KEYCODE_PAGE_DOWN);
                 break;
             case LINE_START :
-                sendKeyUpDown(ic, KeyEvent.KEYCODE_HOME);
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_MOVE_HOME);
                 break;
             case LINE_END :
                 sendKeyUpDown(ic, KeyEvent.KEYCODE_MOVE_END);
@@ -119,7 +125,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 break;
             case MODE_SWITCH :
                 setInputView(kvInsert);
-                moveMode = false;
+                keyMode = Mode.INSERT;
                 break;
             case MODE_SELECT :
                 
@@ -268,7 +274,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         ic.commitText("", -1 * cursorPos + 1);
     }
 
-    public void onInsertKey(int primaryCode, int[] keyCodes) {
+    private void onInsertKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
         switch(primaryCode){
             case Keyboard.KEYCODE_DELETE :
@@ -284,7 +290,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 break;
             case MODE_SWITCH :
                 setInputView(kvMove);
-                moveMode = true;
+                keyMode = Mode.MOVE;
                 break;
             default:
                 char code = (char)primaryCode;
@@ -294,12 +300,87 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 ic.commitText(String.valueOf(code),1);
         }
     }
+
+
+    private void onSelectKey(int primaryCode, int[] keyCodes) {
+        InputConnection ic = getCurrentInputConnection();
+        switch(primaryCode) {
+            case PARA_UP :
+                jumpForward(ic, new char[] {'\n'});
+                break;
+            case PARA_DOWN :
+                jumpBackward(ic, new char[] {'\n'});
+                break;
+            case PAGE_UP :
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_PAGE_UP);
+                break;
+            case PAGE_DOWN :
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_PAGE_DOWN);
+                break;
+            case LINE_START :
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_MOVE_HOME);
+                break;
+            case LINE_END :
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_MOVE_END);
+                break;
+            case LINE_UP :
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_UP);
+                break;
+            case LINE_DOWN :
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_DOWN);
+                break;
+            case WORD_FOR :
+
+                break;
+            case WORD_BACK :
+
+                break;
+            case CHAR_BACK :
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_LEFT);
+                break;
+            case CHAR_FOR :
+                sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_RIGHT);
+                break;
+            case MODE_SWITCH :
+                setInputView(kvInsert);
+                keyMode = Mode.INSERT;
+                break;
+            case MODE_SELECT :
+
+                break;
+            case MODE_COPY :
+
+                break;
+            case MODE_CUT :
+
+                break;
+            case MODE_PASTE :
+
+                break;
+            case MODE_DELETE :
+
+                break;
+            case MODE_NUMVAL :
+                numVal = 0;
+                kvMove.invalidateKey(10);
+                keyboardMove.getKeys().get(9).label = Integer.toString(numVal);
+                break;
+
+        }
+    }
+
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
-        if(moveMode) {
-            onMoveKey(primaryCode, keyCodes);
-        }else {
-            onInsertKey(primaryCode, keyCodes);
+        switch(keyMode) {
+            case MOVE:
+                onMoveKey(primaryCode, keyCodes);
+                break;
+            case INSERT:
+                onInsertKey(primaryCode, keyCodes);
+                break;
+            case SELECT:
+                onSelectKey(primaryCode, keyCodes);
+                break;
         }
     }
 

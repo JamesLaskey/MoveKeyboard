@@ -112,10 +112,10 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_DOWN);
                 break;
             case WORD_FOR :
-
+                jumpForward(ic, new char[] {' ', '\t', '\n'});
                 break;
             case WORD_BACK :
-
+                jumpBackward(ic, new char[] {' ', '\t', '\n'});
                 break;
             case CHAR_BACK :
                 sendKeyUpDown(ic, KeyEvent.KEYCODE_DPAD_LEFT);
@@ -160,22 +160,24 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         return false;
     }
 
-    private void jumpForward(InputConnection ic, char[] seekCharacters) {
+    private int jumpForward(InputConnection ic, char[] seekCharacters) {
         if (ic == null) {
             System.err.println("ic null");
-            return;
+            return 0;
         }
-        int cursorPos = -1;
+        int cursorPos = 0;
         int prevSize = 0;
         boolean found = false;
         CharSequence textAfter = null;
         while(!found) {
             textAfter = ic.getTextAfterCursor(prevSize + PARA_SIZE_GUESS, 0);
-            int start = 1;
+            if(textAfter.length() == 0) {
+                return 0;
+            }
             if(textAfter.length() > 0 &&
                     cmpChars(textAfter.charAt(0), seekCharacters) &&
-                    start == 0) {
-                start++;
+                    prevSize == 0) {
+                prevSize++;
             }
             for (int i = prevSize; i < textAfter.length(); i++) {
                 if (cmpChars(textAfter.charAt(i), seekCharacters)) {
@@ -192,17 +194,16 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         }
         // no new lines in doc
         if (!found) {
-            ic.commitText("", textAfter.length());
-            return;
+            return textAfter.length();
         }
 
-        ic.commitText("", cursorPos);
+        return cursorPos+1;
     }
 
-    private void jumpBackward(InputConnection ic, char[] seekCharacters) {
+    private int jumpBackward(InputConnection ic, char[] seekCharacters) {
         if (ic == null) {
             System.err.println("ic null");
-            return;
+            return 0;
         }
         int cursorPos = -1;
         int prevSize = 0;
@@ -210,6 +211,9 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         CharSequence textBefore = null;
         while(!found) {
             textBefore = ic.getTextBeforeCursor(prevSize + PARA_SIZE_GUESS, 0);
+            if(textBefore.length() == 0) {
+                return 0;
+            }
             int start = (PARA_SIZE_GUESS - 1 > textBefore.length()) ? textBefore.length() - 1: PARA_SIZE_GUESS - 1;
             if(textBefore.length() > 0 &&
                     cmpChars(textBefore.charAt(textBefore.length()-1), seekCharacters) &&
@@ -231,11 +235,10 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         }
         // no new lines in doc
         if (!found) {
-            ic.commitText("", -1 * textBefore.length());
-            return;
+            return -1 * textBefore.length();
         }
 
-        ic.commitText("", -1 * cursorPos + 1);
+        return -1 * cursorPos + 1;
     }
 
 

@@ -302,13 +302,13 @@ public class MoveIME extends InputMethodService
         }
         switch(primaryCode) {
             case PARA_UP : {
-                int jump = jumpForward(ic, new char[]{'\n'});
+                int jump = jumpBackward(ic, new char[]{'\n'});
                 ExtractedText et = ic.getExtractedText(new ExtractedTextRequest(), 0);
                 ic.setSelection(et.selectionStart, et.selectionEnd + jump);
                 break;
             }
             case PARA_DOWN : {
-                int jump = jumpBackward(ic, new char[]{'\n'});
+                int jump = jumpForward(ic, new char[]{'\n'});
                 ExtractedText et = ic.getExtractedText(new ExtractedTextRequest(), 0);
                 ic.setSelection(et.selectionStart + jump, et.selectionEnd);
                 break;

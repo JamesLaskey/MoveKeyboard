@@ -41,7 +41,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     private static final int PAGE_UP = 11;
     private static final int PAGE_DOWN = 12;
 
-    private static final int MODE_SWITCH = 100;
+    private static final int MODE_SWITCH = 1000;
     private static final int MODE_SELECT = 101;
     private static final int MODE_DELETE = 102;
     private static final int MODE_COPY = 103;
@@ -88,10 +88,10 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         InputConnection ic = getCurrentInputConnection();
         switch(primaryCode) {
             case PARA_UP :
-                jumpForward(ic, new char[] {'\n'});
+                jumpBackward(ic, new char[] {'\n'});
                 break;
             case PARA_DOWN :
-                jumpBackward(ic, new char[] {'\n'});
+                jumpForward(ic, new char[] {'\n'});
                 break;
             case PAGE_UP :
                 sendKeyUpDown(ic, KeyEvent.KEYCODE_PAGE_UP);
@@ -173,14 +173,14 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
             textAfter = ic.getTextAfterCursor(prevSize + PARA_SIZE_GUESS, 0);
             int start = 1;
             if(textAfter.length() > 0 &&
-                    cmpChars(textAfter.charAt(textAfter.length()+1), seekCharacters) &&
-                    start == textAfter.length()+1) {
+                    cmpChars(textAfter.charAt(0), seekCharacters) &&
+                    start == 0) {
                 start++;
             }
             for (int i = prevSize; i < textAfter.length(); i++) {
                 if (cmpChars(textAfter.charAt(i), seekCharacters)) {
                     System.err.println("found");
-                    cursorPos = prevSize + i;
+                    cursorPos = i;
                     found = true;
                     break;
                 }
@@ -196,7 +196,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
             return;
         }
 
-        ic.commitText("", cursorPos - 1);
+        ic.commitText("", cursorPos);
     }
 
     private void jumpBackward(InputConnection ic, char[] seekCharacters) {
@@ -238,41 +238,6 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         ic.commitText("", -1 * cursorPos + 1);
     }
 
-    private void paraJumpUp(InputConnection ic) {
-        if (ic == null) {
-            System.err.println("ic null");
-            return;
-        }
-        int cursorPos = -1;
-        int prevSize = 0;
-        boolean found = false;
-        CharSequence textBefore = null;
-        while(!found) {
-            textBefore = ic.getTextBeforeCursor(prevSize + PARA_SIZE_GUESS, 0);
-            for (int i = (PARA_SIZE_GUESS - 1 > textBefore.length()) ? textBefore.length() - 1: PARA_SIZE_GUESS - 1; i >= 0; i--) {
-                if(textBefore.length() != 0 && textBefore.charAt(textBefore.length()-1) == '\n' && i == textBefore.length()-1) {
-                    continue;
-                }
-                if (textBefore.charAt(i) == '\n') {
-                    System.err.println("found");
-                    cursorPos = prevSize + PARA_SIZE_GUESS - i;
-                    found = true;
-                    break;
-                }
-            }
-            if (prevSize == textBefore.length()) {
-                break;
-            }
-            prevSize = textBefore.length();
-        }
-        // no new lines in doc
-        if (!found) {
-            ic.commitText("", -1 * textBefore.length());
-            return;
-        }
-
-        ic.commitText("", -1 * cursorPos + 1);
-    }
 
     private void onInsertKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();

@@ -6,9 +6,4 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:keyPreviewLayout ="@layout/preview">
-    <LinearLayout
-        android:visibility="invisible"
-        android:orientation="vertical"
-        android:id="@+id/num_pop">
-    </LinearLayout>
     </android.inputmethodservice.KeyboardView>

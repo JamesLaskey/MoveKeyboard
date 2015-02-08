@@ -18,8 +18,6 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     private Keyboard keyboardMove;
     private KeyboardView kvMove;
 
-    private View NumView;
-
     private boolean caps = false;
     private boolean moveMode = false;
 
@@ -60,7 +58,6 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
         kvMove.setKeyboard(keyboardMove);
         kvMove.setOnKeyboardActionListener(this);
 
-        NumView = getLayoutInflater().inflate(R.layout.num_select, null);
 
         return kvInsert;
     }
@@ -68,8 +65,6 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
     @Override
     public void onPress(int keyCode) {
         if(keyCode == MODE_NUMVAL) {
-            View NumLinLayout = getLayoutInflater().inflate(R.layout.num_select, null);
-
         }
     }
 
@@ -88,7 +83,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
                 paraJumpDown(ic);
                 break;
             case PAGE_UP :
-                
+
                 break;
             case PAGE_DOWN :
 
@@ -139,7 +134,7 @@ public class MoveIME extends InputMethodService implements KeyboardView.OnKeyboa
             case MODE_NUMVAL :
                 numVal = 0;
                 kvMove.invalidateKey(10);
-                keyboardMove.getKeys().get(10).label = Integer.toString(numVal);
+                keyboardMove.getKeys().get(9).label = Integer.toString(numVal);
                 break;
         }
     }
